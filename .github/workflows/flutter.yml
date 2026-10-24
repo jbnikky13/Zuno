@@ -4,10 +4,12 @@ on:
   push:
     paths:
       - "app/**"
+      - "docs/NATIVE_BOOTSTRAP.md"
       - ".github/workflows/flutter.yml"
   pull_request:
     paths:
       - "app/**"
+      - "docs/NATIVE_BOOTSTRAP.md"
       - ".github/workflows/flutter.yml"
   workflow_dispatch:
 
@@ -30,11 +32,16 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Generate Android and iOS host projects
-        run: flutter create --platforms=android,ios --project-name zuno --org com.zuno .
+      - name: Generate native projects and configure BLE permissions
+        run: bash tool/bootstrap_native.sh
 
-      - name: Install dependencies
-        run: flutter pub get
+      - name: Verify native BLE permission declarations
+        run: |
+          grep -q 'android.permission.BLUETOOTH_SCAN' android/app/src/main/AndroidManifest.xml
+          grep -q 'android.permission.BLUETOOTH_CONNECT' android/app/src/main/AndroidManifest.xml
+          grep -q 'android.permission.BLUETOOTH_ADVERTISE' android/app/src/main/AndroidManifest.xml
+          grep -q 'NSBluetoothAlwaysUsageDescription' ios/Runner/Info.plist
+          grep -q 'NSBluetoothPeripheralUsageDescription' ios/Runner/Info.plist
 
       - name: Analyze Dart code
         run: flutter analyze
