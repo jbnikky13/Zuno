@@ -7,9 +7,9 @@ Zuno is an offline-first social app in development for Android and iPhone. It is
 - **Zuno Nearby:** Bluetooth-based discovery and local peer-to-peer messaging, plus local Wi-Fi for large file transfers. No mobile data is needed for a successful local transfer.
 - **Zuno Anywhere:** An optional encrypted internet relay for messaging people in other cities or countries. This route requires an internet connection on a sending or receiving device or an available internet relay.
 
-Bluetooth cannot send directly across countries. If no internet route exists and the recipient is not reachable through a physical mesh, the message remains queued until a route becomes available.
+Bluetooth cannot send directly across countries. If no route exists, the message remains queued until a route becomes available.
 
-> **Project status:** Early prototype. The Flutter interface and project documentation are present, but wireless messaging, mesh relaying, file transfer, and the internet relay are not implemented or verified yet.
+> **Project status:** Early prototype. The Flutter interface, message lifecycle model, transport interface, and route selector are present. Wireless messaging, mesh relaying, file transfer, and the internet relay are not implemented or verified yet.
 
 ## Product goals
 
@@ -23,16 +23,17 @@ Bluetooth cannot send directly across countries. If no internet route exists and
 
 ## Repository layout
 
-- `app/` — initial Flutter app, message lifecycle model, shared transport-adapter contract, offline-first route selector, and widget/model/router tests.
-- `docs/ARCHITECTURE.md` — offline/online transport design, international delivery, message states, security and implementation sequence.
-- `.github/workflows/flutter.yml` — Flutter analysis and widget-test workflow.
+- `app/` — Flutter app source, message lifecycle model, transport-adapter contract, route selector, tests, and native bootstrap script.
+- `docs/ARCHITECTURE.md` — offline/online transport design, international delivery, message states, security, and implementation sequence.
+- `docs/NATIVE_BOOTSTRAP.md` — generate and review Android/iOS host projects.
+- `.github/workflows/flutter.yml` — native project generation, Dart analysis, and tests in CI.
 
 ## Planned technical direction
 
 - **App UI:** Flutter and Dart.
 - **Platform networking:** Native Kotlin (Android) and Swift (iOS) integrations where required.
 - **Local persistence:** SQLite-compatible storage for conversations, queued messages, and transfer state.
-- **Nearby messaging:** Bluetooth Low Energy discovery and a carefully evaluated peer-to-peer mesh protocol.
+- **Nearby messaging:** Bluetooth Low Energy discovery and a carefully evaluated cross-platform mesh protocol.
 - **Local file transport:** A secure local high-throughput connection using platform-supported Wi-Fi networking options.
 - **International messaging:** An authenticated internet relay that stores and forwards end-to-end encrypted message envelopes for offline recipients.
 - **Optional online services:** Profile sync and backups only with user consent.
@@ -71,13 +72,13 @@ These choices are provisional until the cross-platform wireless proof of concept
 Install the Flutter SDK, then run:
 
 ```bash
+bash app/tool/bootstrap_native.sh
 cd app
-flutter pub get
 flutter analyze
 flutter test
 ```
 
-The current repository contains the Dart app source, not generated Android and iOS platform projects. Those platform projects must be generated and reviewed as part of the native integration work before device builds are possible.
+The bootstrap script generates Android and iOS host folders. The CI workflow checks that project generation can run and then analyzes/tests the Dart source. Linux CI cannot perform an iOS device build; iOS builds require macOS and Xcode. Native host generation does not mean wireless transports are implemented.
 
 ## License
 
