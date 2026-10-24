@@ -16,6 +16,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
   StreamSubscription<List<NearbyDevice>>? _devicesSubscription;
   List<NearbyDevice> _devices = const <NearbyDevice>[];
   bool _scanning = false;
+  bool _advertising = false;
   bool _busy = false;
   String? _error;
 
@@ -41,6 +42,31 @@ class _NearbyScreenState extends State<NearbyScreen> {
         });
         await _discovery!.startScanning();
         if (mounted) setState(() => _scanning = true);
+      }
+    } catch (error) {
+      if (mounted) setState(() => _error = _friendlyError(error));
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _toggleAdvertising() async {
+    if (_busy) return;
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      _discovery ??= NearbyDiscoveryService();
+      _devicesSubscription ??= _discovery!.devices.listen((devices) {
+        if (mounted) setState(() => _devices = devices);
+      });
+      if (_advertising) {
+        await _discovery!.stopAdvertising();
+        if (mounted) setState(() => _advertising = false);
+      } else {
+        await _discovery!.startAdvertising();
+        if (mounted) setState(() => _advertising = true);
       }
     } catch (error) {
       if (mounted) setState(() => _error = _friendlyError(error));
@@ -87,7 +113,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
             border: Border.all(color: const Color(0xFFF0D9A4)),
           ),
           child: const Text(
-            'Early proof of concept: discovered devices are not yet verified Zuno users. Messaging, advertising, and file transfer are not connected.',
+            'Early proof of concept: this broadcasts a public Zuno service UUID and scans for that service. Messaging, peer verification, and file transfer are not connected.',
             style: TextStyle(color: Color(0xFF604A1D), height: 1.4),
           ),
         ),
@@ -106,9 +132,27 @@ class _NearbyScreenState extends State<NearbyScreen> {
                 ? 'Please wait…'
                 : _scanning
                     ? 'Stop scanning'
-                    : 'Scan for nearby devices',
+                    : 'Scan for Zuno devices',
           ),
         ),
+        const SizedBox(height: 10),
+        OutlinedButton.icon(
+          onPressed: _busy ? null : _toggleAdvertising,
+          icon: Icon(
+            _advertising ? Icons.stop_circle_outlined : Icons.bluetooth_audio,
+          ),
+          label: Text(
+            _advertising ? 'Stop making this phone discoverable' : 'Make this phone discoverable',
+          ),
+        ),
+        if (_advertising)
+          const Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: Text(
+              'Zuno presence is being broadcast publicly over Bluetooth. No messages or personal IDs are included.',
+              style: TextStyle(fontSize: 12, color: Color(0xFF69736E)),
+            ),
+          ),
         if (_error != null) ...[
           const SizedBox(height: 12),
           Text(_error!, style: const TextStyle(color: Colors.red)),
