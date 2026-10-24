@@ -23,7 +23,7 @@ Bluetooth cannot send directly across countries. If no route exists, the message
 
 ## Repository layout
 
-- `app/` — Flutter app source, message lifecycle model, transport-adapter contract, route selector, tests, and native bootstrap script.
+- `app/` — Flutter app source, message lifecycle model, transport-adapter contract, route selector, a fail-closed native nearby channel bridge, tests, and native bootstrap script.
 - `docs/ARCHITECTURE.md` — offline/online transport design, international delivery, message states, security, and implementation sequence.
 - `docs/NATIVE_BOOTSTRAP.md` — generate and review Android/iOS host projects.
 - `.github/workflows/flutter.yml` — native project generation, Dart analysis, and tests in CI.
