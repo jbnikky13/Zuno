@@ -1,3 +1,4 @@
+import 'screens/nearby_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -167,46 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildNearby() {
-    return ListView(
-      padding: const EdgeInsets.all(20),
-      children: const [
-        Text(
-          'Nearby',
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800),
-        ),
-        SizedBox(height: 8),
-        Text(
-          'Discover people and devices around you without relying on mobile data.',
-          style: TextStyle(fontSize: 15, height: 1.4),
-        ),
-        SizedBox(height: 20),
-        _PrototypeNotice(),
-        SizedBox(height: 16),
-        Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 36),
-            child: Column(
-              children: [
-                Icon(Icons.radar_rounded, size: 64, color: Color(0xFF7A8580)),
-                SizedBox(height: 12),
-                Text(
-                  'Nearby discovery is not connected yet',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.w700),
-                ),
-                SizedBox(height: 6),
-                Text(
-                  'The next milestone is testing discovery between real iPhone and Android devices.',
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  Widget _buildNearby() => const NearbyScreen();
 
   Widget _buildTransfers() {
     return ListView(
