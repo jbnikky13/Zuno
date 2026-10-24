@@ -30,11 +30,14 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Generate Android and iOS host projects
+        run: flutter create --platforms=android,ios --project-name zuno --org com.zuno .
+
       - name: Install dependencies
         run: flutter pub get
 
       - name: Analyze Dart code
         run: flutter analyze
 
-      - name: Run widget tests
+      - name: Run widget and model tests
         run: flutter test
