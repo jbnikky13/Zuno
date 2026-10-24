@@ -17,7 +17,8 @@ void main() {
     await tester.tap(find.text('Nearby').last);
     await tester.pumpAndSettle();
     expect(find.text('Discovered devices'), findsOneWidget);
-    expect(find.text('Scan for nearby devices'), findsOneWidget);
+    expect(find.text('Scan for Zuno devices'), findsOneWidget);
+    expect(find.text('Make this phone discoverable'), findsOneWidget);
 
     await tester.tap(find.text('Share').last);
     await tester.pumpAndSettle();
