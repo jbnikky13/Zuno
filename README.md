@@ -23,7 +23,7 @@ Bluetooth cannot send directly across countries. If no internet route exists and
 
 ## Repository layout
 
-- `app/` — initial Flutter app, transport-agnostic message lifecycle model, and tests for widget navigation and delivery-state transitions.
+- `app/` — initial Flutter app, transport-agnostic message lifecycle model, shared transport-adapter contract, and tests for widget navigation and delivery-state transitions.
 - `docs/ARCHITECTURE.md` — offline/online transport design, international delivery, message states, security and implementation sequence.
 - `.github/workflows/flutter.yml` — Flutter analysis and widget-test workflow.
 
