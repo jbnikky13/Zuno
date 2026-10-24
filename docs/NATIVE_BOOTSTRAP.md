@@ -33,12 +33,13 @@ A GitHub-hosted Linux runner can verify Dart analysis, tests, and generated perm
 
 - [ ] Android phone scans with mobile data and Wi-Fi turned off; Bluetooth remains on.
 - [ ] iPhone scans with mobile data and Wi-Fi turned off; Bluetooth remains on.
+- [ ] On phone A, tap **Make this phone discoverable**; on phone B, tap **Scan for Zuno devices**. Repeat in the opposite direction.
 - [ ] Android and iPhone are tested near each other, then farther apart.
 - [ ] A permission denial is handled without a crash; enabling permission in Settings allows a retry.
 - [ ] Stop scanning stops discovery without leaving a stuck spinner.
 - [ ] Record device model, OS version, build/commit, scan result, and any logs.
 
-Important: the current discovery view lists BLE peripherals visible to the phone, not confirmed Zuno users. The current app has not yet implemented a Zuno advertising payload/service UUID, GATT connection, authenticated peer identity, or message transfer. Depending on OS behavior, two phones may not discover each other until Zuno's peripheral advertising is implemented. Therefore this stage verifies native permissions and the scanning API; it is not proof of Android-to-iPhone Zuno discovery yet.
+Important: the current discovery view lists BLE peripherals visible to the phone, not confirmed Zuno users. The Nearby screen now has separate controls to advertise a public Zuno service UUID and scan specifically for that service. Advertisements contain only the short name and service UUID—no message content or personal identity. This makes a physical-device discovery test possible, but Android-to-iPhone behavior remains unverified until tested on actual phones. GATT connection, authenticated peer identity, and message transfer are not implemented.
 
 ## Remaining limitations
 
