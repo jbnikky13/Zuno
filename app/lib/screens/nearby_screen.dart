@@ -12,7 +12,7 @@ class NearbyScreen extends StatefulWidget {
 }
 
 class _NearbyScreenState extends State<NearbyScreen> {
-  late final NearbyDiscoveryService _discovery;
+  NearbyDiscoveryService? _discovery;
   StreamSubscription<List<NearbyDevice>>? _devicesSubscription;
   List<NearbyDevice> _devices = const <NearbyDevice>[];
   bool _scanning = false;
@@ -22,10 +22,6 @@ class _NearbyScreenState extends State<NearbyScreen> {
   @override
   void initState() {
     super.initState();
-    _discovery = NearbyDiscoveryService();
-    _devicesSubscription = _discovery.devices.listen((devices) {
-      if (mounted) setState(() => _devices = devices);
-    });
   }
 
   Future<void> _toggleScanning() async {
@@ -36,10 +32,14 @@ class _NearbyScreenState extends State<NearbyScreen> {
     });
     try {
       if (_scanning) {
-        await _discovery.stopScanning();
+        await _discovery?.stopScanning();
         if (mounted) setState(() => _scanning = false);
       } else {
-        await _discovery.startScanning();
+        _discovery ??= NearbyDiscoveryService();
+        _devicesSubscription ??= _discovery!.devices.listen((devices) {
+          if (mounted) setState(() => _devices = devices);
+        });
+        await _discovery!.startScanning();
         if (mounted) setState(() => _scanning = true);
       }
     } catch (error) {
@@ -59,7 +59,8 @@ class _NearbyScreenState extends State<NearbyScreen> {
   @override
   void dispose() {
     _devicesSubscription?.cancel();
-    unawaited(_discovery.dispose());
+    final discovery = _discovery;
+    if (discovery != null) unawaited(discovery.dispose());
     super.dispose();
   }
 
