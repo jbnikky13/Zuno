@@ -16,7 +16,8 @@ void main() {
 
     await tester.tap(find.text('Nearby').last);
     await tester.pumpAndSettle();
-    expect(find.text('Nearby discovery is not connected yet'), findsOneWidget);
+    expect(find.text('Discovered devices'), findsOneWidget);
+    expect(find.text('Scan for nearby devices'), findsOneWidget);
 
     await tester.tap(find.text('Share').last);
     await tester.pumpAndSettle();
